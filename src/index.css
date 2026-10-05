@@ -1,0 +1,506 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN SYSTEM — Cricket Tournament Scoreboard
+   ============================================================ */
+
+@theme {
+  /* Primary */
+  --color-primary: #1e1b4b;
+  --color-primary-light: #3730a3;
+  --color-primary-lighter: #4f46e5;
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+
+  /* Accent */
+  --color-accent: #059669;
+  --color-accent-light: #10b981;
+  --color-accent-dark: #047857;
+
+  /* Warm Accent */
+  --color-warm: #d97706;
+  --color-warm-light: #f59e0b;
+
+  /* Surfaces */
+  --color-surface: #f8fafc;
+  --color-surface-card: #ffffff;
+  --color-surface-dark: #0f172a;
+  --color-surface-elevated: #ffffff;
+
+  /* Text */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #f8fafc;
+
+  /* Cricket Event Colors */
+  --color-live: #dc2626;
+  --color-wicket: #ef4444;
+  --color-boundary: #3b82f6;
+  --color-six: #8b5cf6;
+  --color-dot: #cbd5e1;
+  --color-wide: #f97316;
+  --color-noball: #f97316;
+
+  /* Border */
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+
+  /* Typography */
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   LAYER FIX — IMPORTANT
+   Tailwind v4 puts every utility (m-*, p-*, py-*, spacing...)
+   inside @layer utilities. Unlayered CSS always wins over
+   layered CSS, so plain rules here would silently disable ALL
+   margin/padding utilities and make text/elements collapse on
+   top of each other. Wrapping every custom rule in @layer
+   components lets utilities win again, while our custom
+   classes still beat Tailwind's base styles.
+   ============================================================ */
+
+@layer components {
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+}
+
+/* Reusable Global Centered Container */
+.app-container {
+  width: 100%;
+  max-width: 1360px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .app-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .app-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* ============================================================
+   LIVE PULSE ANIMATION
+   ============================================================ */
+
+@keyframes live-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-live);
+  animation: live-pulse 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.live-dot-lg {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--color-live);
+  animation: live-pulse 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* ============================================================
+   LINKED LIST VISUALIZER ANIMATIONS
+   ============================================================ */
+
+@keyframes node-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes node-exit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes node-highlight {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.3);
+  }
+}
+
+@keyframes traverse-glow {
+  0% {
+    border-color: var(--color-border);
+  }
+  50% {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 12px rgba(5, 150, 105, 0.4);
+  }
+  100% {
+    border-color: var(--color-border);
+  }
+}
+
+@keyframes arrow-flow {
+  0% {
+    stroke-dashoffset: 20;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.ll-node-enter {
+  animation: node-enter 0.4s ease-out forwards;
+}
+
+.ll-node-exit {
+  animation: node-exit 0.3s ease-in forwards;
+}
+
+.ll-node-highlight {
+  animation: node-highlight 1s ease-in-out 2;
+}
+
+.ll-node-traverse {
+  animation: traverse-glow 0.6s ease-in-out;
+}
+
+/* ============================================================
+   FULL-SCREEN ANIMATE TRAVERSE MODE
+   ============================================================ */
+
+.traverse-strip {
+  scrollbar-width: none;
+}
+
+.traverse-strip::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes traverse-node-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 16px rgba(5, 150, 105, 0);
+  }
+}
+
+.traverse-node-active {
+  animation: traverse-node-pulse 1.6s ease-in-out infinite;
+}
+
+/* ============================================================
+   SCORE DISPLAY
+   ============================================================ */
+
+.score-large {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.score-medium {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.score-small {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* ============================================================
+   BALL EVENT BADGES
+   ============================================================ */
+
+.ball-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.ball-dot {
+  background-color: var(--color-dot);
+  color: var(--color-text-secondary);
+}
+
+.ball-single {
+  background-color: #e0e7ff;
+  color: var(--color-primary);
+}
+
+.ball-two {
+  background-color: #e0e7ff;
+  color: var(--color-primary);
+}
+
+.ball-three {
+  background-color: #e0e7ff;
+  color: var(--color-primary);
+}
+
+.ball-four {
+  background-color: #dbeafe;
+  color: var(--color-boundary);
+  border: 2px solid var(--color-boundary);
+}
+
+.ball-six {
+  background-color: #ede9fe;
+  color: var(--color-six);
+  border: 2px solid var(--color-six);
+}
+
+.ball-wicket {
+  background-color: #fee2e2;
+  color: var(--color-wicket);
+  border: 2px solid var(--color-wicket);
+}
+
+.ball-wide {
+  background-color: #fff7ed;
+  color: var(--color-wide);
+  border: 1px dashed var(--color-wide);
+}
+
+.ball-noball {
+  background-color: #fff7ed;
+  color: var(--color-noball);
+  border: 1px dashed var(--color-noball);
+}
+
+/* ============================================================
+   SCORING BUTTONS
+   ============================================================ */
+
+.scoring-btn {
+  min-width: 64px;
+  min-height: 64px;
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.scoring-btn:active {
+  transform: scale(0.95);
+}
+
+.scoring-btn-runs {
+  background-color: var(--color-primary-50);
+  color: var(--color-primary);
+  border-color: var(--color-primary-100);
+}
+
+.scoring-btn-runs:hover {
+  background-color: var(--color-primary-100);
+  border-color: var(--color-primary-light);
+}
+
+.scoring-btn-boundary {
+  background-color: #dbeafe;
+  color: var(--color-boundary);
+  border-color: #bfdbfe;
+}
+
+.scoring-btn-boundary:hover {
+  background-color: #bfdbfe;
+  border-color: var(--color-boundary);
+}
+
+.scoring-btn-six {
+  background-color: #ede9fe;
+  color: var(--color-six);
+  border-color: #ddd6fe;
+}
+
+.scoring-btn-six:hover {
+  background-color: #ddd6fe;
+  border-color: var(--color-six);
+}
+
+.scoring-btn-wicket {
+  background-color: #fee2e2;
+  color: var(--color-wicket);
+  border-color: #fecaca;
+}
+
+.scoring-btn-wicket:hover {
+  background-color: #fecaca;
+  border-color: var(--color-wicket);
+}
+
+.scoring-btn-extra {
+  background-color: #fff7ed;
+  color: var(--color-wide);
+  border-color: #fed7aa;
+}
+
+.scoring-btn-extra:hover {
+  background-color: #fed7aa;
+  border-color: var(--color-wide);
+}
+
+.scoring-btn-undo {
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+.scoring-btn-undo:hover {
+  background-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary-lighter), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Page transition */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-enter 0.3s ease-out;
+}
+
+} /* end @layer components */
